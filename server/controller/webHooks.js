@@ -2,6 +2,7 @@ import { Webhook } from "svix";
 import userModel from "../models/userModel.js"; // Ensure this path is correct
 
 const clerkWebhooks = async (req, res) => {
+  console.log("Webhook route hit at", new Date().toISOString());
   console.log("Clerk webhook received a request.");
 
   // Check if CLERK_WEBHOOK_SECRET is loaded
