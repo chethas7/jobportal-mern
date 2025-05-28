@@ -23,11 +23,12 @@ const clerkWebhooks = async (req, res) => {
 
     // Verify the webhook
     try {
-      evt = wh.verify(JSON.stringify(req.body), {
+      evt = wh.verify(req.body, {
         "svix-id": req.headers["svix-id"],
         "svix-timestamp": req.headers["svix-timestamp"],
         "svix-signature": req.headers["svix-signature"],
       });
+
       console.log("Webhook successfully verified.");
     } catch (err) {
       console.error("Error verifying webhook:", err.message);
@@ -116,24 +117,20 @@ const clerkWebhooks = async (req, res) => {
         if (!data.id) {
           // Clerk might send a slightly different payload for deletions
           console.error("User deleted event: ID is missing from data.");
-          return res
-            .status(400)
-            .json({
-              success: false,
-              message: "User ID missing in delete event.",
-            });
+          return res.status(400).json({
+            success: false,
+            message: "User ID missing in delete event.",
+          });
         }
         const deletedUser = await userModel.findByIdAndDelete(data.id);
         if (!deletedUser) {
           console.error("User not found for deletion with ID:", data.id);
           // It's often okay to return 200 even if not found, as the goal (user gone) is achieved.
           // Or return 404 if you need to distinguish.
-          return res
-            .status(200)
-            .json({
-              success: true,
-              message: "User not found or already deleted.",
-            });
+          return res.status(200).json({
+            success: true,
+            message: "User not found or already deleted.",
+          });
         }
         console.log("User deleted from DB, ID:", data.id);
         res
@@ -152,12 +149,10 @@ const clerkWebhooks = async (req, res) => {
     console.error("Error processing webhook:", error.message);
     console.error("Stack Trace:", error.stack); // Log the full stack trace
     // Avoid sending back detailed error messages in production if they might contain sensitive info
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Internal server error processing webhook.",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error processing webhook.",
+    });
   }
 };
 
