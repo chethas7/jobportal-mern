@@ -20,7 +20,7 @@ const AppDownload = () => {
               href="https://www.apple.com/in/app-store/"
               className="inline-block"
             >
-              <img className="h-30" src={assets.app_store} alt="" />
+              <img className="h-12" src={assets.app_store} alt="" />
             </a>
           </div>
         </div>
